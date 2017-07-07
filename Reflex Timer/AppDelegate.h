@@ -6,10 +6,25 @@
 //  Copyright (c) 2013 Medalabs Development. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "ViewController.h"
+#import "AppDelegate.h"
+#import <iAd/iAd.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+extern float finTime;
+extern NSString *winner;
+extern int screen;
+extern int count;
+
+@interface AppDelegate : UIResponder <ADBannerViewDelegate,UIApplicationDelegate>{
+    ADBannerView *_sharedAdBannerView;
+    BOOL bannerIsVisible;
+    
+}
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) IBOutlet ADBannerView *adView;
+@property (nonatomic, assign) BOOL adBannerViewIsVisible;
+
+- (ADBannerView *)sharedAdBannerView;
 
 @end

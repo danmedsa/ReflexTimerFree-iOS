@@ -8,14 +8,57 @@
 
 #import "AppDelegate.h"
 
+float finTime;
+NSString *winner;
+int screen;
+int count = 0;
+
+
 @implementation AppDelegate
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
     return YES;
 }
-							
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    NSLog(@"bannerViewDidLoadAD");
+    if (!_adBannerViewIsVisible) {
+        _adBannerViewIsVisible = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"adjustAdBannerView" object:nil];
+    }
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    
+    NSLog(@"BannerAd didfailtoreceive");
+    if (_adBannerViewIsVisible) {
+        _adBannerViewIsVisible = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"adjustAdBannerView" object:nil];
+    }
+}
+
+- (ADBannerView *)sharedAdBannerView
+{
+    if (_sharedAdBannerView == nil) {
+        
+        Class classAdBannerView = NSClassFromString(@"ADBannerView");
+        
+        if (classAdBannerView != nil) {
+            _sharedAdBannerView = [[classAdBannerView alloc] initWithFrame:CGRectZero];
+            [_sharedAdBannerView setFrame:CGRectOffset([_sharedAdBannerView frame], 0,
+                                                       -(50))];
+            [_sharedAdBannerView setDelegate:self];
+        }
+    }
+    
+    return _sharedAdBannerView;
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
